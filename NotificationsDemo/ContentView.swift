@@ -1,26 +1,23 @@
-//
-//  ContentView.swift
-//  NotificationsDemo
-//
-//  Created by Mark Volkmann on 9/14/22.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            Button("Send Notification") {
+                LocalNotification.sendNow(
+                    title: "My Title",
+                    body: "Did you get this?"
+                )
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding()
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+        .task {
+            do {
+                try await LocalNotificationManager.shared.authorize()
+            } catch {
+                Log.error(error)
+            }
+        }
     }
 }
